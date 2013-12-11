@@ -66,7 +66,11 @@ l_int32 selectServer()
 	{
 		visited[i]= 0;
 	}
-	while(1)
+	// Anna: shortcut here, TODO: add cmd line server param
+	visited[0] = 1;
+	return 0;
+
+	while(0)
 	{
 		int flag = 0;
 		int i=0;
@@ -79,7 +83,7 @@ l_int32 selectServer()
 			}
 		}
 		if(!flag) {
-			printf("\nAll servers are busy. \nPlease try again later.");
+			printf("\nAll servers are busy. \nPlease try again later.\n");
 		//	guidlg->m_cTextout.SetWindowTextW(L"Could not connect to selected M-lab server. \r\nPlease try again later.");
 			return -1;
 		}
@@ -174,7 +178,7 @@ int main(l_int32 argc, char* argv[])
 	cur_actual_rate = 0 ;
 	cur_req_rate = 0 ;
 	gettimeofday(&exp_start_time, NULL);
-	verbose=0;
+	verbose=1;
 	bw_resol=1;
 	netlog=0;
 	increase_stream_len=0;
@@ -221,10 +225,15 @@ int main(l_int32 argc, char* argv[])
 
 	iterate = 1;
 //	guidlg->m_cTextout.SetWindowTextW(L"Connecting to selected M-lab server.");
-	printf("Connecting to selected M-lab server.");
+	if (argc != 2) {
+	  printf("Connecting to selected M-lab server.");
+	  if (selectServer() == -1)
+	    return -1;
 
-	if(selectServer() == -1)
-		return -1;
+	} else {
+	  num_servers = 1;
+	  strcpy(serverList[0],argv[1]);
+	}
 	char *visited = (char*)malloc(num_servers*sizeof(char));
 	bzero(visited,num_servers);
 
@@ -250,7 +259,7 @@ int main(l_int32 argc, char* argv[])
 			continue;
 		visited[num] = 1;
 		strcpy(hostname,serverList[num]);
-	//	printf("\nTrying to connect %s\n",hostname);
+		printf("\nTrying to connect %d %s\n",num,hostname);
 		if(client_TCP_connection()==-1)	
 			continue;
 		break;
