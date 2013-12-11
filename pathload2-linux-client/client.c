@@ -113,7 +113,7 @@ l_int32 selectServer()
 		}
 		memcpy(&ctr_code, ctr_buff, sizeof(l_int32));
 		num_servers = ntohl(ctr_code);
-	//	printf("\nNo of servers available = %d",num_servers);
+		printf("\nNo of servers available = %d",num_servers);
 		for(i=0;i<num_servers;i++)
 		{
 			bzero(buf,MAXDATASIZE);
@@ -182,6 +182,9 @@ int main(l_int32 argc, char* argv[])
 	bzero(result,512);
 	bzero(result1,512);
 	quiet=0;
+
+        printf("Pathload2\n");
+
 	
 	c=getopt(argc,argv,"vV");
 	if(c=='v'|| c=='V')
@@ -204,7 +207,7 @@ int main(l_int32 argc, char* argv[])
 */
 	num_stream = NUM_STREAM ;
 	min_sleeptime();
-	
+
 	/* gettimeofday latency */
 	for(i=0;i<30;i++)
 	{
@@ -212,12 +215,14 @@ int main(l_int32 argc, char* argv[])
 		gettimeofday(&tv2,NULL);
 		latency[i]=tv2.tv_sec*1000000+tv2.tv_usec-tv1.tv_sec*1000000-tv1.tv_usec;
 	}
+
 	order_int(latency,ord_latency,30);
 	gettimeofday_latency = ord_latency[15];  
-	
+
 	iterate = 1;
 //	guidlg->m_cTextout.SetWindowTextW(L"Connecting to selected M-lab server.");
 	printf("Connecting to selected M-lab server.");
+
 	if(selectServer() == -1)
 		return -1;
 	char *visited = (char*)malloc(num_servers*sizeof(char));
